@@ -20,7 +20,7 @@
     <h1>Animals Search</h1>
 
     <!-- This is where animal buttons will be-->
-    <div id="animals-view"></div>
+    <div id="topics"></div>
 
     <form id="animal-form">
       <label for="animal-input">Add an animal</label>
@@ -35,6 +35,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
+
+
       // Initial array of animals
       var topics = ["Cat", "Dog", "Lion", "Lama"];
 
@@ -43,7 +45,7 @@
 
         // Deleting the animal buttons prior to adding new animal buttons
         // (this is necessary otherwise we will have repeat buttons)
-        $("#animals-view").empty();
+        $("#topics").empty();
 
         // Looping through the array of animals
         for (var i = 0; i < topics.length; i++) {
@@ -58,30 +60,35 @@
           // Providing the button's text with a value of the animal at index i
           a.text(topics[i]);
           // Adding the button to the HTML
-          $("#animals-view").append(a);
+          $("#topics").append(a);
         }
       }
+
 
       // This function handles events where one button is clicked
       $("#add-animal").on("click", function(event) {
         // event.preventDefault() prevents the form from trying to submit itself.
         // We're using a form so that the user can hit enter instead of clicking the button if they want
         event.preventDefault();
+   
 
         // This line will grab the text from the input box
-        var animal = $("#animal-input").val().trim();
+        var animals = $("#animal-input").val().trim();
         // The animal from the textbox is then added to our array
-        topics.push(animal);
+        topics.push(animals);
 
         // calling renderButtons which handles the processing of our animal array
         renderButtons();
+        $("#animal-input").val("");
+
       });
 
       // Calling the renderButtons function at least once to display the initial list of animals
       renderButtons();
 
-    $("button").on("click", function() {
-
+    $(document).on("click", "button", function() {
+      console.log("button click");
+      // $("#gifs-appear-here").empty();
       var animal = $(this).attr("data-name");
 
       var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
@@ -94,23 +101,50 @@
 
         .done(function(response) {
           var results = response.data;
+          console.log("done function", results);
 
           for (var i = 0; i < results.length; i++) {
             var gifDiv = $("<div class='item'>");
 
             var rating = results[i].rating;
+            var animate = results[i].images.fixed_height.url;
+            var still = results[i].images.fixed_height_still.url;
 
             var p = $("<p>").text("Rating: " + rating);
 
             var animalImage = $("<img>");
-            animalImage.attr("src", results[i].images.fixed_height.url);
+
+            animalImage.attr("src", still)
+                        .attr("data-state", "still")
+                        .attr("data-still", still)
+                        .attr("data-animate", animate);
+
 
             gifDiv.prepend(p);
             gifDiv.prepend(animalImage);
 
             $("#gifs-appear-here").prepend(gifDiv);
+            $("#gifs-appear-here").empty();
+            
           }
         });
+
+
+        
+
+        $(document).on("click", "img", function() {
+       
+        var state=$(this).attr("data-state");
+        console.log(this);
+       
+        if (state === "still") {
+          $(this).attr("src", $(this).attr("data-animate"));
+          $(this).attr("data-state","animate");
+        } else {
+          $(this).attr("src", $(this).attr("data-still"));
+          $(this).attr("data-state","still");
+        }
+      });
     });
     </script>
   </div>

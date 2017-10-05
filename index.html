@@ -36,7 +36,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
       // Initial array of animals
-      var animals = ["Cat", "Dog", "Lion", "Lama"];
+      var topics = ["Cat", "Dog", "Lion", "Lama"];
 
       // Function for displaying animal data
       function renderButtons() {
@@ -46,7 +46,7 @@
         $("#animals-view").empty();
 
         // Looping through the array of animals
-        for (var i = 0; i < animals.length; i++) {
+        for (var i = 0; i < topics.length; i++) {
 
           // Then dynamicaly generating buttons for each animal in the array.
           // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
@@ -54,9 +54,9 @@
           // Adding a class
           a.addClass("animal");
           // Adding a data-attribute with a value of the animal at index i
-          a.attr("data-name", animals[i]);
+          a.attr("data-name", topics[i]);
           // Providing the button's text with a value of the animal at index i
-          a.text(animals[i]);
+          a.text(topics[i]);
           // Adding the button to the HTML
           $("#animals-view").append(a);
         }
@@ -71,7 +71,7 @@
         // This line will grab the text from the input box
         var animal = $("#animal-input").val().trim();
         // The animal from the textbox is then added to our array
-        animals.push(animal);
+        topics.push(animal);
 
         // calling renderButtons which handles the processing of our animal array
         renderButtons();
@@ -82,7 +82,7 @@
 
     $("button").on("click", function() {
 
-      var animal = $(this).attr("");
+      var animal = $(this).attr("data-name");
 
       var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
         animal + "&api_key=dc6zaTOxFJmzC&limit=10";
